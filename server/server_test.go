@@ -30,8 +30,8 @@ func Test_HandleTaskShouldReturnStatusMethodNotAllowed(t *testing.T) {
 func Test_HandleTaskShouldReceiveValidHTTPPOSTBody(t *testing.T) {
 	payload1 := `{
 					"execute":{
-						"url":"http://someurl:8080/task/payload1",
-						"body":"payload1"
+						"url":"",
+						"body":""
 					}
 				}`
 	payload2 := `{
@@ -59,7 +59,7 @@ func Test_HandleTaskShouldReceiveValidHTTPPOSTBody(t *testing.T) {
 
 		bs, _ := ioutil.ReadAll(req.Body)
 
-		var es task
+		var es Task
 		json.Unmarshal(bs, &es)
 		if rr.Code != http.StatusBadRequest {
 			t.Errorf("Invalid POST Body to HandlerTask. URL: %v and Body: %v", es.Execute.URL, es.Execute.Body)
