@@ -61,17 +61,8 @@ func Test_HandleTaskShouldReceiveValidHTTPPOSTBody(t *testing.T) {
 
 		var es task
 		json.Unmarshal(bs, &es)
-		if es.Execute.URL == "" || es.Execute.Body == "" {
+		if rr.Code != http.StatusBadRequest {
 			t.Errorf("Invalid POST Body to HandlerTask. URL: %v and Body: %v", es.Execute.URL, es.Execute.Body)
 		}
 	}
-}
-
-type task struct {
-	Execute execute `json:execute`
-}
-
-type execute struct {
-	URL  string `json:url`
-	Body string `json:body`
 }
