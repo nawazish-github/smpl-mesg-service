@@ -12,11 +12,13 @@ import (
 //LaunchServerOn Listens for incoming http connections on given port
 func LaunchServerOn(port string) {
 
-	http.HandleFunc("/task", HandleTask)
+	http.HandleFunc("/execute", HandleTask)
+	http.HandleFunc("/batchexecute", HandleBatchExecute)
 	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
 
 //HandleTask handles POST request, understood as tasks, with well-formed payload
+//These are single tasks.
 func HandleTask(w http.ResponseWriter, r *http.Request) {
 
 	reqTime := initialize()
@@ -29,7 +31,8 @@ func HandleTask(w http.ResponseWriter, r *http.Request) {
 	reqBody, err := ioutil.ReadAll(r.Body)
 
 	if err != nil {
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		http.Error(w, "Internal Server Error: Could not read request",
+			http.StatusInternalServerError)
 		return
 	}
 
@@ -37,7 +40,8 @@ func HandleTask(w http.ResponseWriter, r *http.Request) {
 	err = json.Unmarshal(reqBody, &es)
 
 	if err != nil {
-		http.Error(w, "Internal Server Error: could not unmarshal POST body", http.StatusInternalServerError)
+		http.Error(w, "Internal Server Error: could not unmarshal POST body",
+			http.StatusInternalServerError)
 		return
 	}
 
@@ -53,7 +57,8 @@ func HandleTask(w http.ResponseWriter, r *http.Request) {
 	resp, err := requester.Request()
 
 	if err != nil {
-		http.Error(w, "Could not make POST request to upstream service", http.StatusInternalServerError)
+		http.Error(w, "Could not make POST request to upstream service",
+			http.StatusInternalServerError)
 		return
 	}
 
@@ -61,7 +66,8 @@ func HandleTask(w http.ResponseWriter, r *http.Request) {
 	mEvent, err := marshalEvent(event)
 
 	if err != nil {
-		http.Error(w, "Internal Server Error: could not unmarshal POST body", http.StatusInternalServerError)
+		http.Error(w, "Internal Server Error: could not unmarshal POST body",
+			http.StatusInternalServerError)
 		return
 	}
 
