@@ -66,3 +66,27 @@ func Test_HandleTaskShouldReceiveValidHTTPPOSTBody(t *testing.T) {
 		}
 	}
 }
+
+func Test_ShouldTestClientsPOSTMethod(t *testing.T) {
+	execStub := StubExecute{}
+	requester := Requester{
+		client: execStub,
+	}
+
+	b, e := requester.Request()
+
+	if e != nil {
+		t.Errorf("Requester failed to make POST call")
+	}
+
+	strResp := string(b)
+	if strResp != "some data" {
+		t.Errorf("Client could not return valid response")
+	}
+
+}
+
+func (r StubExecute) POST() ([]byte, error) {
+	b := []byte("some data")
+	return b, nil
+}
