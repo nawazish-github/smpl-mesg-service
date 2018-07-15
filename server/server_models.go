@@ -35,3 +35,16 @@ type Success struct {
 	StatusCode int    `json:statusCode`
 	Body       []byte `json:body`
 }
+
+//BatchExecute represents the group of HTTP POST requests
+//to be made by Requester
+type BatchExecute struct {
+	BatchRequests []Execute `json:batchExecute`
+}
+
+//BatchRequester is an IPOSTRequest implementation.
+//It can call all the POST requests concurrently
+type BatchRequester struct {
+	batchExecute BatchExecute
+	client       Client
+}
