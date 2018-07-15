@@ -73,7 +73,7 @@ func Test_ShouldTestClientsPOSTMethod(t *testing.T) {
 		client: execStub,
 	}
 
-	b, e := requester.Request()
+	b, c, e := requester.Request()
 
 	if e != nil {
 		t.Errorf("Requester failed to make POST call")
@@ -84,9 +84,13 @@ func Test_ShouldTestClientsPOSTMethod(t *testing.T) {
 		t.Errorf("Client could not return valid response")
 	}
 
+	if c != 200 {
+		t.Errorf("Client could not return StatusOK")
+	}
+
 }
 
-func (r StubExecute) POST() ([]byte, error) {
+func (r StubExecute) POST() ([]byte, int, error) {
 	b := []byte("some data")
-	return b, nil
+	return b, 200, nil
 }
