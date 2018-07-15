@@ -7,11 +7,11 @@ import (
 )
 
 type Client interface {
-	POST() ([]byte, error)
+	POST() ([]byte, int, error)
 }
 
-func (e Execute) POST() ([]byte, error) {
+func (e Execute) POST() ([]byte, int, error) {
 	resp, err := http.Post(e.URL, "application/json", strings.NewReader(e.Body))
 	b, err := ioutil.ReadAll(resp.Body)
-	return b, err
+	return b, resp.StatusCode, err
 }

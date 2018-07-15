@@ -5,11 +5,11 @@ package server
 //interface - a "Requester" - in conjunction with a "Client",
 // makes an appropriate outbound call.
 type IPOSTRequest interface {
-	Request() ([]byte, error)
+	Request() ([]byte, int, error)
 }
 
 //Request is an implementation of the IPOSTRequest contract
-func (r Requester) Request() ([]byte, error) {
-	b, e := r.client.POST()
-	return b, e
+func (r Requester) Request() ([]byte, int, error) {
+	b, c, e := r.client.POST()
+	return b, c, e
 }
