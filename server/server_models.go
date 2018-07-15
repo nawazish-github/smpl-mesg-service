@@ -29,3 +29,9 @@ type StubExecute struct{}
 type Requester struct {
 	client Client
 }
+
+//Success is HTTP response body for the downstream callers
+type Success struct {
+	StatusCode int    `json:statusCode`
+	Body       []byte `json:body`
+}
