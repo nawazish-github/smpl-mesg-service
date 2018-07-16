@@ -9,20 +9,20 @@ mesg-service-test sends event to mesg-core with the body of the response made to
 ## Contracts
 The /batchexecute is POST method only endpoint which receives request body in the following format:
 `[
-    {URL:,
-    Body:,},
-    {URL:,
-    Body:,}
+    {URL:...
+    Body:...},
+    {URL:...
+    Body:...}
 ]`. Where URL is the URL of the upstream endpoint and Body is the payload for the request.
 
 And following is the Response received once all the requests in the batch execution has executed, either normally or exceptionally:
 `{
     URL:{
-        StatusCode:,
-        Body:,
+        StatusCode:...
+        Body:...
     },
     URL:{
-        StatusCode:,
-        Body:,
+        StatusCode:...
+        Body:...
     }
 }` .Where each url in the batch request is represented by `URL` and corresponding response body by `Body` and status code by `StatusCode`
