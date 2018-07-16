@@ -22,7 +22,10 @@ type OnRequest struct {
 }
 
 //StubExecute helps Unit Test Client.POST method
-type StubExecute struct{}
+type StubExecute struct {
+	URL  string `json:url`
+	Body string `json:body`
+}
 
 //Requester holds an instance of Client implementation
 //to make POST calls
@@ -47,4 +50,8 @@ type BatchExecute struct {
 type BatchRequester struct {
 	batchExecute BatchExecute
 	client       Client
+}
+
+type stubBatchExecute struct {
+	BatchRequests []Execute
 }
