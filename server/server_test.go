@@ -68,9 +68,8 @@ func Test_HandleTaskShouldReceiveValidHTTPPOSTBody(t *testing.T) {
 }
 
 func Test_ShouldTestClientsPOSTMethod(t *testing.T) {
-	execStub := StubExecute{}
 	requester := Requester{
-		client: execStub,
+		client: StubExecute{},
 	}
 
 	b, c, e := requester.Request()
@@ -93,4 +92,42 @@ func Test_ShouldTestClientsPOSTMethod(t *testing.T) {
 func (r StubExecute) POST() ([]byte, int, error) {
 	b := []byte("some data")
 	return b, 200, nil
+}
+
+func Test_ShouldReturnValidResponseAfterRunningBatchRequests(t *testing.T) {
+	sExecute := []Execute{{URL: "url1", Body: "body1"}, {URL: "url2", Body: "body2"}}
+	var batchExecute BatchExecute
+	batchExecute.BatchRequests = sExecute
+	br := StubBatchRequester{batchExecute: batchExecute, client: StubExecute{}}
+	bites, _, _ := br.Request()
+	var m map[string]Success
+	err := json.Unmarshal(bites, &m)
+	if err != nil {
+		t.Errorf("Batch executions failed.")
+	}
+	if len(m) != 2 {
+		t.Errorf("Batch executions did not execute exactly 2 POST requests")
+	}
+}
+
+func (br StubBatchRequester) Request() ([]byte, int, error) {
+	var m = make(map[string]Success)
+	for _, v := range br.batchExecute.BatchRequests {
+		_, statuscode, _ := br.client.POST()
+		m[v.URL] = Success{
+			StatusCode: statuscode,
+		}
+	}
+	b, e := json.Marshal(m)
+	return b, 200, e
+}
+
+func (r stubBatchExecute) POST() ([]byte, int, error) {
+	b := []byte("some data")
+	return b, 200, nil
+}
+
+type StubBatchRequester struct {
+	batchExecute BatchExecute
+	client       Client
 }
