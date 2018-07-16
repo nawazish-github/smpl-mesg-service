@@ -33,7 +33,6 @@ func HandleBatchExecute(w http.ResponseWriter, r *http.Request) {
 	go sendAnEventToMesgCore(event)
 
 	//execute the batch of POST requests
-
 	//marshal request body to get batch requests
 	var be BatchExecute
 	err = json.Unmarshal(reqBytes, &be)
@@ -50,6 +49,7 @@ func HandleBatchExecute(w http.ResponseWriter, r *http.Request) {
 	mapBytes, statusCode, err := batchRequester.Request()
 
 	if statusCode != 200 || err != nil {
+		log.Fatal(err)
 		http.Error(w, "Failed to process batch request", http.StatusInternalServerError)
 		return
 	}
